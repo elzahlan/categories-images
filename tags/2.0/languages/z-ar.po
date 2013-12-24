@@ -1,0 +1,32 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Categories Images\n"
+"POT-Creation-Date: 2013-01-10 16:45+0800\n"
+"PO-Revision-Date: 2013-01-25 08:27+0200\n"
+"Last-Translator: Muhammad Zahlan <elzahlan@gmail.com>\n"
+"Language-Team: Joe Tse <tkjune@gmail.com>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-KeywordsList: _;__;_e\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: categories-images.php:53 categories-images.php:69 categories-images.php:159
+msgid "Image"
+msgstr "صورة"
+
+#: categories-images.php:56 categories-images.php:71 categories-images.php:142
+msgid "Upload/Add image"
+msgstr "رفع/اضافة صورة"
+
+#: categories-images.php:72 categories-images.php:143
+msgid "Remove image"
+msgstr "حذف الصورة"
+
+#: categories-images.php:179
+msgid "Thumbnail"
+msgstr "صورة مصغرة"
