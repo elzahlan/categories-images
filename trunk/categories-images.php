@@ -4,7 +4,7 @@
  * Plugin URI: http://zahlan.net/blog/2012/06/categories-images/
  * Description: Categories Images Plugin allow you to add an image to category or any custom term.
  * Author: Muhammad Said El Zahlan
- * Version: 2.4.1
+ * Version: 2.5.1
  * Author URI: http://zahlan.net/
  */
 ?>
@@ -24,7 +24,7 @@ function z_init() {
 		$zci_options = get_option('zci_options');
 		if (empty($zci_options['excluded_taxonomies']))
 			$zci_options['excluded_taxonomies'] = array();
-		
+
 	    foreach ($z_taxonomies as $z_taxonomy) {
 			if (in_array($z_taxonomy, $zci_options['excluded_taxonomies']))
 				continue;
@@ -54,7 +54,7 @@ function z_add_texonomy_field() {
 		wp_enqueue_style('thickbox');
 		wp_enqueue_script('thickbox');
 	}
-	
+
 	echo '<div class="form-field">
 		<label for="taxonomy_image">' . __('Image', 'zci') . '</label>
 		<input type="text" name="taxonomy_image" id="taxonomy_image" value="" />
@@ -71,8 +71,8 @@ function z_edit_texonomy_field($taxonomy) {
 		wp_enqueue_style('thickbox');
 		wp_enqueue_script('thickbox');
 	}
-	
-	if (z_taxonomy_image_url( $taxonomy->term_id, NULL, TRUE ) == Z_IMAGE_PLACEHOLDER) 
+
+	if (z_taxonomy_image_url( $taxonomy->term_id, NULL, TRUE ) == Z_IMAGE_PLACEHOLDER)
 		$image_text = "";
 	else
 		$image_text = z_taxonomy_image_url( $taxonomy->term_id, NULL, TRUE );
@@ -84,6 +84,7 @@ function z_edit_texonomy_field($taxonomy) {
 		</td>
 	</tr>'.z_script();
 }
+
 // upload using wordpress upload
 function z_script() {
 	return '<script type="text/javascript">
@@ -117,14 +118,14 @@ function z_script() {
 					return false;
 				}
 			});
-			
+
 			$(".z_remove_image_button").click(function() {
 				$("#taxonomy_image").val("");
 				$(this).parent().siblings(".title").children("img").attr("src","' . Z_IMAGE_PLACEHOLDER . '");
 				$(".inline-edit-col :input[name=\'taxonomy_image\']").val("");
 				return false;
 			});
-			
+
 			if (wordpress_ver < "3.5") {
 				window.send_to_editor = function(html) {
 					imgurl = $("img",html).attr("src");
@@ -137,8 +138,8 @@ function z_script() {
 					tb_remove();
 				}
 			}
-			
-			$(".editinline").live("click", function(){  
+
+			$(".editinline").live("click", function(){
 			    var tax_id = $(this).parents("tr").attr("id").substr(4);
 			    var thumb = $("#tag-"+tax_id+" .thumb img").attr("src");
 				if (thumb != "' . Z_IMAGE_PLACEHOLDER . '") {
@@ -147,8 +148,8 @@ function z_script() {
 					$(".inline-edit-col :input[name=\'taxonomy_image\']").val("");
 				}
 				$(".inline-edit-col .title img").attr("src",thumb);
-			    return false;  
-			});  
+			    return false;
+			});
 	    });
 	</script>';
 }
@@ -179,15 +180,17 @@ function z_taxonomy_image_url($term_id = NULL, $size = NULL, $return_placeholder
 			$term_id = $current_term->term_id;
 		}
 	}
-	
+
     $taxonomy_image_url = get_option('z_taxonomy_image'.$term_id);
-    $attachment_id = z_get_attachment_id_by_url($taxonomy_image_url);
-    if(!empty($attachment_id)) {
-    	if (empty($size))
-    		$size = 'full';
-    	$taxonomy_image_url = wp_get_attachment_image_src($attachment_id, $size);
-	    $taxonomy_image_url = $taxonomy_image_url[0];
-    }
+    if(!empty($taxonomy_image_url)) {
+	    $attachment_id = z_get_attachment_id_by_url($taxonomy_image_url);
+	    if(!empty($attachment_id)) {
+	    	if (empty($size))
+	    		$size = 'full';
+	    	$taxonomy_image_url = wp_get_attachment_image_src($attachment_id, $size);
+		    $taxonomy_image_url = $taxonomy_image_url[0];
+	    }
+	}
 
     if ($return_placeholder)
 		return ($taxonomy_image_url != '') ? $taxonomy_image_url : Z_IMAGE_PLACEHOLDER;
@@ -196,7 +199,7 @@ function z_taxonomy_image_url($term_id = NULL, $size = NULL, $return_placeholder
 }
 
 function z_quick_edit_custom_box($column_name, $screen, $name) {
-	if ($column_name == 'thumb') 
+	if ($column_name == 'thumb')
 		echo '<fieldset>
 		<div class="thumb inline-edit-col">
 			<label>
@@ -240,7 +243,7 @@ function z_taxonomy_columns( $columns ) {
 function z_taxonomy_column( $columns, $column, $id ) {
 	if ( $column == 'thumb' )
 		$columns = '<span><img src="' . z_taxonomy_image_url($id, NULL, TRUE) . '" alt="' . __('Thumbnail', 'zci') . '" class="wp-post-image" /></span>';
-	
+
 	return $columns;
 }
 
@@ -305,4 +308,49 @@ function zci_options() {
 		</form>
 	</div>
 <?php
+}
+
+// get taxonomy image for the given term_id
+function z_taxonomy_image($term_id = NULL, $size = 'full', $attr = NULL, $echo = TRUE) {
+	if (!$term_id) {
+		if (is_category())
+			$term_id = get_query_var('cat');
+		elseif (is_tax()) {
+			$current_term = get_term_by('slug', get_query_var('term'), get_query_var('taxonomy'));
+			$term_id = $current_term->term_id;
+		}
+	}
+
+    $taxonomy_image_url = get_option('z_taxonomy_image'.$term_id);
+    if(!empty($taxonomy_image_url)) {
+	    $attachment_id = z_get_attachment_id_by_url($taxonomy_image_url);
+	    if(!empty($attachment_id))
+	    	$taxonomy_image = wp_get_attachment_image($attachment_id, $size, FALSE, $attr);
+	    else {
+	    	$image_attr = '';
+	    	if(is_array($attr)) {
+	    		if(!empty($attr['class']))
+	    			$image_attr .= ' class="'.$attr['class'].'" ';
+	    		if(!empty($attr['alt']))
+	    			$image_attr .= ' alt="'.$attr['alt'].'" ';
+	    		if(!empty($attr['width']))
+	    			$image_attr .= ' width="'.$attr['width'].'" ';
+	    		if(!empty($attr['height']))
+	    			$image_attr .= ' height="'.$attr['height'].'" ';
+	    		if(!empty($attr['title']))
+	    			$image_attr .= ' title="'.$attr['title'].'" ';
+	    	}
+	    	$taxonomy_image = '<img src="'.$taxonomy_image_url.'" '.$image_attr.'/>';
+	    }
+	}
+
+	if(!empty($taxonomy_image)){
+		if ($echo)
+			echo $taxonomy_image;
+		else
+			return $taxonomy_image;
+	}
+	else{
+		return false;
+	}
 }
