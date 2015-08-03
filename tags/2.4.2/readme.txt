@@ -1,10 +1,10 @@
 === Categories Images ===
 Contributors: elzahlan
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=G8LC4VSYKYSGA
-Tags: Category Image, Category Images, Categories Images, taxonomy image, taxonomy images, taxonomies images, category icon, categories icons, category logo, categories logos, admin, wp-admin, category image plugin, categories images plugin, category featured image, categories featured images, feature image for category
+Tags: Category Image, Category Images, Categories Images, taxonomy image, taxonomy images, taxonomies images, category icon, categories icons, category logo, categories logos, admin, wp-admin, category image plugin, categories images plugin
 Requires at least: 2.8
-Tested up to: 4.2.1
-Stable tag: 2.5
+Tested up to: 3.9.1
+Stable tag: 2.4.2
 
 The Categories Images Plugin allow you to add image with category or taxonomy.
 
@@ -12,7 +12,7 @@ The Categories Images Plugin allow you to add image with category or taxonomy.
 
 The Categories Images Plugin allow you to add image with category or taxonomy.
 
-Use `<?php if (function_exists('z_taxonomy_image_url')) echo z_taxonomy_image_url(); ?>` to get the url and put it in any img tag or simply use `<?php if (function_exists('z_taxonomy_image')) z_taxonomy_image(); ?>` in (category or taxonomy) template.
+Use `<?php if (function_exists('z_taxonomy_image_url')) echo z_taxonomy_image_url(); ?>` to get the url and put it in any img tag in (category or taxonomy) template.
 
 Also from settings menu you can exclude any taxonomies from the plugin to avoid conflicting with another plugins like WooCommerce!
 
@@ -56,11 +56,6 @@ Please check the documentation page:
 5. Now you can exclude any taxonomy from the plugin and save changes.
 
 == Changelog ==
-
-= 2.5 =
-* Adding language support for Ukrainian. Thanks to Michael Yunat [http://getvoip.com].
-* Adding new function z_taxonomy_image() to display category or taxonomy image directly with support for size, alt and other attributes, for and how to use it please check the documentations.
-* Some code enhancements.
 
 = 2.4.2 =
 * Update code to reduce db queries. Thanks to fburatti [http://profiles.wordpress.org/fburatti/].
