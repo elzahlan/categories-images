@@ -1,9 +1,16 @@
-# Categories Images # a wordpress plugin
+# Categories Images #
+a wordpress plugin
+
 **Author:** Muhammad Said El Zahlan (elzahlan)
+
 **Donate link:** https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=G8LC4VSYKYSGA
+
 **Tags:** Category Image, Category Images, Categories Images, taxonomy image, taxonomy images, taxonomies images, category icon, categories icons, category logo, categories logos, admin, wp-admin, category image plugin, categories images plugin, category featured image, categories featured images, feature image for category
+
 **Requires at least:** Wordpress 2.8
+
 **Tested up to:** Wordpress 4.3.1
+
 **Stable tag:** 2.5.1
 
 ## Description ##
