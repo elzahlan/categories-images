@@ -11,7 +11,7 @@ Wordpress Plugin
 
 **Stable tag:** 2.5.1
 
-**Donate link:** [https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=G8LC4VSYKYSGA]
+**Donate link:** [https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=G8LC4VSYKYSGA](PayPal)
 
 ## Description ##
 
