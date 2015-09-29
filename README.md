@@ -1,9 +1,7 @@
 # Categories Images #
 Wordpress Plugin
 
-**Author:** Muhammad Said El Zahlan (elzahlan)
-
-**Tags:** Category Image, Category Images, Categories Images, taxonomy image, taxonomy images, taxonomies images, category icon, categories icons, category logo, categories logos, admin, wp-admin, category image plugin, categories images plugin, category featured image, categories featured images, feature image for category
+**Contributors:** Muhammad Said El Zahlan (elzahlan)
 
 **Requires at least:** Wordpress 2.8
 
@@ -11,17 +9,16 @@ Wordpress Plugin
 
 **Stable tag:** 2.5.1
 
-**Donate link:** [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=G8LC4VSYKYSGA)
-
 ## Description ##
 
 The Categories Images is a Wordpress plugin allow you to add image to category, tag or custom taxonomy.
 
-Use `<?php if (function_exists('z_taxonomy_image_url')) echo z_taxonomy_image_url(); ?>` to get the url and put it in any img tag or simply use `<?php if (function_exists('z_taxonomy_image')) z_taxonomy_image(); ?>` in (category or taxonomy) template.
+Use `<?php if (function_exists('z_taxonomy_image_url')) echo z_taxonomy_image_url(); ?>` to get the url and put it in any img tag.
+Or simply use `<?php if (function_exists('z_taxonomy_image')) z_taxonomy_image(); ?>` in (category or taxonomy) template.
 
 Also from settings menu you can exclude any taxonomies from the plugin to avoid conflicting with another plugins like WooCommerce!
 
-### More documentation ###
+### Documentation ###
 
 Go to [http://zahlan.net/blog/2012/06/categories-images/](http://zahlan.net/blog/2012/06/categories-images/)
 
@@ -41,11 +38,7 @@ Manual Installation:
 	2. Upload `categories-images` extracted folder to the `/wp-content/plugins/` directory
 	3. Activate the plugin through the 'Plugins' menu in WordPress
 	
-You're done! The Plugin ready to use, for more please check the plugin description.
-
-### More documentation ###
-
-Go to [http://zahlan.net/blog/2012/06/categories-images/](http://zahlan.net/blog/2012/06/categories-images/)
+You're done! The plugin is ready to use, for more please check the plugin description.
 
 ## Frequently Asked Questions ##
 
