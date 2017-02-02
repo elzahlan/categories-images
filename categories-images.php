@@ -345,6 +345,9 @@ function z_taxonomy_image($term_id = NULL, $size = 'full', $attr = NULL, $echo =
 	    	$taxonomy_image = '<img src="'.$taxonomy_image_url.'" '.$image_attr.'/>';
 	    }
 	}
+	else{
+		$taxonomy_image = '';
+	}
 
 	if ($echo)
 		echo $taxonomy_image;
