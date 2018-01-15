@@ -5,9 +5,9 @@ Wordpress Plugin
 
 **Requires at least:** Wordpress 2.8
 
-**Tested up to:** Wordpress 4.3.1
+**Tested up to:** Wordpress 4.9.1
 
-**Stable tag:** 2.5.3
+**Stable tag:** 2.5.4
 
 ## Description ##
 
@@ -46,6 +46,9 @@ Please check the documentation page:
 [http://zahlan.net/blog/2012/06/categories-images/](http://zahlan.net/blog/2012/06/categories-images/)
 
 ## Changelog ##
+
+### 2.5.4 ###
+* Fix compatibility with the latest Wordpress version
 
 ### 2.5.3 ###
 * Fix not displaying single tag image bug in tag.php template
