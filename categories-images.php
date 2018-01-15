@@ -9,8 +9,7 @@
  * Domain Path: /languages
  * Text Domain: categories-images
  */
-?>
-<?php
+
 if (!defined('Z_PLUGIN_URL'))
 	define('Z_PLUGIN_URL', untrailingslashit(plugins_url('', __FILE__)));
 

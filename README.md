@@ -7,7 +7,7 @@ Wordpress Plugin
 
 **Tested up to:** Wordpress 4.3.1
 
-**Stable tag:** 2.5.2
+**Stable tag:** 2.5.3
 
 ## Description ##
 
@@ -46,6 +46,10 @@ Please check the documentation page:
 [http://zahlan.net/blog/2012/06/categories-images/](http://zahlan.net/blog/2012/06/categories-images/)
 
 ## Changelog ##
+
+### 2.5.2 ###
+* Fix not displaying single tag image bug in tag.php template
+* Adding language support for Swedish. Thanks to Simon Sandgren
 
 ### 2.5.2 ###
 * Fix displaying full size image bug in backend
