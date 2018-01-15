@@ -47,7 +47,7 @@ Please check the documentation page:
 
 ## Changelog ##
 
-### 2.5.2 ###
+### 2.5.3 ###
 * Fix not displaying single tag image bug in tag.php template
 * Adding language support for Swedish. Thanks to Simon Sandgren
 
