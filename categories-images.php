@@ -4,7 +4,7 @@
  * Plugin URI: http://zahlan.net/blog/2012/06/categories-images/
  * Description: Categories Images Plugin allow you to add an image to category or any custom term.
  * Author: Muhammad Said El Zahlan
- * Version: 2.5.2
+ * Version: 2.5.3
  * Author URI: http://zahlan.net/
  * Domain Path: /languages
  * Text Domain: categories-images
@@ -183,6 +183,8 @@ function z_taxonomy_image_url($term_id = NULL, $size = 'full', $return_placehold
 	if (!$term_id) {
 		if (is_category())
 			$term_id = get_query_var('cat');
+        elseif (is_tag())
+            $term_id = get_query_var('tag_id');
 		elseif (is_tax()) {
 			$current_term = get_term_by('slug', get_query_var('term'), get_query_var('taxonomy'));
 			$term_id = $current_term->term_id;
@@ -321,6 +323,8 @@ function z_taxonomy_image($term_id = NULL, $size = 'full', $attr = NULL, $echo =
 	if (!$term_id) {
 		if (is_category())
 			$term_id = get_query_var('cat');
+        elseif (is_tag())
+            $term_id = get_query_var('tag_id');
 		elseif (is_tax()) {
 			$current_term = get_term_by('slug', get_query_var('term'), get_query_var('taxonomy'));
 			$term_id = $current_term->term_id;
