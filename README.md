@@ -1,13 +1,13 @@
 # Categories Images #
 Wordpress Plugin
 
-**Contributors:** Muhammad Said El Zahlan (elzahlan)
+**Contributors:** Muhammad El Zahlan (elzahlan)
 
 **Requires at least:** Wordpress 2.8
 
-**Tested up to:** Wordpress 4.9.1
+**Tested up to:** Wordpress 5.3.2
 
-**Stable tag:** 2.5.4
+**Stable tag:** 3.0.0
 
 ## Description ##
 
@@ -46,6 +46,11 @@ Please check the documentation page:
 [http://zahlan.net/blog/2012/06/categories-images/](http://zahlan.net/blog/2012/06/categories-images/)
 
 ## Changelog ##
+
+### 3.0.0 ###
+* Fix settings page issues
+* Fix compatibility with the latest Wordpress version
+* Rewrote the whole plugin from scratch, now the code is much efficient, readable and cleaner
 
 ### 2.5.4 ###
 * Fix compatibility with the latest Wordpress version
