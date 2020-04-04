@@ -8,7 +8,7 @@
  * Plugin URI: http://zahlan.net/blog/categories-images/
  * Description: Categories Images Plugin allow you to add an image to category or any custom term.
  * Author: Muhammad El Zahlan
- * Version: 3.0.0
+ * Version: 3.0.1
  * Author URI: http://zahlan.net/
  * Domain Path: /languages
  * Text Domain: categories-images
@@ -183,7 +183,7 @@ class ZCategoriesImages
 
     function zSaveTaxonomyImage($term_id) {
         if(isset($_POST['zci_taxonomy_image'])) {
-            update_option('z_taxonomy_image'.$term_id, $_POST['zci_taxonomy_image'], NULL);
+            update_option('z_taxonomy_image'.$term_id, $_POST['zci_taxonomy_image'], false);
         }
     }
 
