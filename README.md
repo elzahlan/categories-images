@@ -47,6 +47,9 @@ Please check the documentation page:
 
 ## Changelog ##
 
+### 3.0.1 ###
+* Disable options autoload to enhance wordpress queries performace
+
 ### 3.0.0 ###
 * Fix settings page issues
 * Fix compatibility with the latest Wordpress version
