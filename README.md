@@ -5,7 +5,7 @@ Wordpress Plugin
 
 **Requires at least:** Wordpress 2.8
 
-**Tested up to:** Wordpress 5.4
+**Tested up to:** Wordpress 5.7.2
 
 **Stable tag:** 3.0.1
 
