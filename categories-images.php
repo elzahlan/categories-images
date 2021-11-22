@@ -130,7 +130,7 @@ class ZCategoriesImages
         }
         echo '<tr class="form-field">
             <th scope="row" valign="top"><label for="zci_taxonomy_image">' . __('Image', 'categories-images') . '</label></th>
-            <td><input type="hidden" name="zci_taxonomy_image_id" id="zci_taxonomy_image_id" value="'.$image_id.'" /><img class="zci-taxonomy-image" src="' . $this->zTaxonomyImageUrl( $taxonomy->term_id, 'medium', TRUE ) . '"/><br/><input type="text" name="zci_taxonomy_image" id="zci_taxonomy_image" value="'.$image_url.'" /><br />
+            <td><input type="hidden" name="zci_taxonomy_image_id" id="zci_taxonomy_image_id" value="'.esc_attr($image_id).'" /><img class="zci-taxonomy-image" src="' . esc_url( $this->zTaxonomyImageUrl( $taxonomy->term_id, 'medium', TRUE ) ) . '"/><br/><input type="text" name="zci_taxonomy_image" id="zci_taxonomy_image" value="'.esc_url($image_url).'" /><br />
             <button class="z_upload_image_button button">' . __('Upload/Add image', 'categories-images') . '</button>
             <button class="z_remove_image_button button">' . __('Remove image', 'categories-images') . '</button>
             </td>
