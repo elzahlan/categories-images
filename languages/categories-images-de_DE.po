@@ -1,0 +1,60 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Categories Images\n"
+"POT-Creation-Date: 2013-06-14 04:42+0200\n"
+"PO-Revision-Date: 2023-07-14 14:39+0200\n"
+"Last-Translator: Sylvie Denarie <sylvie.denarie@denarie.de>\n"
+"Language-Team: \n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _;__;_e\n"
+"X-Poedit-Basepath: ..\n"
+"X-Generator: Poedit 3.2.2\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: ../categories-images.php:59 ../categories-images.php:80
+#: ../categories-images. php:227
+msgid "Image"
+msgstr "Bild"
+
+#: ../categories-images.php:62 ../categories-images.php:82
+#: ../categories-images. php:209
+msgid "Upload/Add image"
+msgstr "Bild hochladen/Bild hinzufügen"
+
+#: ../categories-images.php:83 ../categories-images.php:210
+msgid "Remove image"
+msgstr "Bild löschen"
+
+#: ../categories-images.php:245
+msgid "Thumbnail"
+msgstr "Miniaturansicht"
+
+#: ../categories-images.php:265 ../categories-images.php:272
+msgid "Categories Images settings"
+msgstr "Kategorie-Bilder Einstellungen"
+
+#: ../categories-images.php:265 ../categories-images.php:303
+msgid "Categories Images"
+msgstr "Kategorie-Bilder"
+
+#: ../categories-images.php:273
+msgid "Excluded Taxonomies"
+msgstr "Ausgeschlossene Taxonomien"
+
+#: ../categories-images.php:278
+msgid ""
+"Please select the taxonomies you want to exclude it from Categories Images "
+"plugin"
+msgstr ""
+"Bitte wähle die Kategorien/Taxonomien  aus, die Du vom Kategorie-Bilder "
+"Plugin ausschließen willst"
+
+#: ../categories-images.php:298
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+"Du hast keine ausreichende Berechtigung, um auf diese Seite zuzugreifen."
