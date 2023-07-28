@@ -8,7 +8,7 @@
  * Plugin URI: http://zahlan.net/blog/categories-images/
  * Description: Categories Images Plugin allow you to add an image to category or any custom term.
  * Author: Muhammad El Zahlan
- * Version: 3.0.1
+ * Version: 3.1.0
  * Author URI: http://zahlan.net/
  * Domain Path: /languages
  * Text Domain: categories-images

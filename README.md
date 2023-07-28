@@ -5,9 +5,9 @@ Wordpress Plugin
 
 **Requires at least:** Wordpress 2.8
 
-**Tested up to:** Wordpress 5.7.2
+**Tested up to:** Wordpress 6.2.2
 
-**Stable tag:** 3.0.1
+**Stable tag:** 3.1.0
 
 ## Description ##
 
@@ -47,6 +47,11 @@ Please check the documentation page:
 
 ## Changelog ##
 
+### 3.1.0 ###
+* Added DE translation, thanks to denarie.
+* Start using imageId instead of imageUrl to solve any the CDN issues, thanks so alessandrocarrera.
+* Tested with the latest version of wordpress
+
 ### 3.0.1 ###
 * Disable options autoload to enhance wordpress queries performace
 
@@ -69,23 +74,23 @@ Please check the documentation page:
 
 ### 2.5.1 ###
 * Adding language support for Russian.
-* Adding language support for Serbian. Thanks to Andrijana Nikolic [http://webhostinggeeks.com/].
-* Adding language support for Catalan. Thanks to Marc Queralt i Bassa [http://www.demomentsomtres.com/].
+* Adding language support for Serbian. Thanks to Andrijana Nikolic.
+* Adding language support for Catalan. Thanks to Marc Queralt.
 * Change the plugin text domain from zci to categories-images to match the plugin slug as requested by Wordpress.
 
 ### 2.5 ###
-* Adding language support for Ukrainian. Thanks to Michael Yunat [http://getvoip.com].
+* Adding language support for Ukrainian. Thanks to Michael Yunat.
 * Adding new function z_taxonomy_image() to display category or taxonomy image directly with support for size, alt and other attributes, for and how to use it please check the documentations.
 * Some code enhancements.
 
 ### 2.4.2 ###
-* Update code to reduce db queries. Thanks to fburatti [http://profiles.wordpress.org/fburatti/].
+* Update code to reduce db queries. Thanks to fburatti.
 
 ### 2.4.1 ###
 * Fix placeholder bug in backend.
 
 ### 2.4 ###
-* Adding language support for Spanish (Thansk so much to Maria Ramos [http://webhostinghub.com]).
+* Adding language support for Spanish (Thansk so much to Maria Ramos).
 * Adding support for resizing categories images (Thanks so much to Rahil Wazir).
 * Some code enhancements.
 
