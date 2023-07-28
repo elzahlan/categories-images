@@ -15,6 +15,7 @@ jQuery(document).ready(function($) {
                 // Grab the selected attachment.
                 var attachment = frame.state().get("selection").first();
                 var attachmentUrl = attachment.attributes.url;
+                var attachmentId = attachment.attributes.id;
                 attachmentUrl = attachmentUrl.replace('-scaled.', '.');
 
                 frame.close();
@@ -22,9 +23,12 @@ jQuery(document).ready(function($) {
                 if (upload_button.parent().prev().children().hasClass("tax_list")) {
                     upload_button.parent().prev().children().val(attachmentUrl);
                     upload_button.parent().prev().prev().children().attr("src", attachmentUrl);
+                    upload_button.parent().next().children().val(attachmentId);
                 }
-                else
+                else {
                     $("#zci_taxonomy_image").val(attachmentUrl);
+                    $("#zci_taxonomy_image_id").val(attachmentId);
+                }
             });
             frame.open();
         }

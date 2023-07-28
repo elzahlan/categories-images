@@ -66,6 +66,7 @@ class ZCategoriesImages
                 // If tax is deleted
                 add_action("delete_{$z_taxonomy}", function($tt_id) {
                     delete_option('z_taxonomy_image'.$tt_id);
+                    delete_option('z_taxonomy_image_id'.$tt_id);
                 });
             }
         }
@@ -103,6 +104,7 @@ class ZCategoriesImages
         }
         
         echo '<div class="form-field">
+            <input type="hidden" name="zci_taxonomy_image_id" id="zci_taxonomy_image_id" value="" />
             <label for="zci_taxonomy_image">' . __('Image', 'categories-images') . '</label>
             <input type="text" name="zci_taxonomy_image" id="zci_taxonomy_image" value="" />
             <br/>
@@ -119,13 +121,16 @@ class ZCategoriesImages
             wp_enqueue_script('thickbox');
         }
         
-        if ($this->zTaxonomyImageUrl( $taxonomy->term_id, NULL, TRUE ) == $this->zci_placeholder) 
+        if ($this->zTaxonomyImageUrl( $taxonomy->term_id, NULL, TRUE ) == $this->zci_placeholder) {
             $image_url = "";
-        else
+            $image_id  = "";
+        } else {
             $image_url = $this->zTaxonomyImageUrl( $taxonomy->term_id, NULL, TRUE );
+            $image_id  = $this->zTaxonomyImageID( $taxonomy->term_id );
+        }
         echo '<tr class="form-field">
             <th scope="row" valign="top"><label for="zci_taxonomy_image">' . __('Image', 'categories-images') . '</label></th>
-            <td><img class="zci-taxonomy-image" src="' . $this->zTaxonomyImageUrl( $taxonomy->term_id, 'medium', TRUE ) . '"/><br/><input type="text" name="zci_taxonomy_image" id="zci_taxonomy_image" value="'.$image_url.'" /><br />
+            <td><input type="hidden" name="zci_taxonomy_image_id" id="zci_taxonomy_image_id" value="'.esc_attr($image_id).'" /><img class="zci-taxonomy-image" src="' . esc_url( $this->zTaxonomyImageUrl( $taxonomy->term_id, 'medium', TRUE ) ) . '"/><br/><input type="text" name="zci_taxonomy_image" id="zci_taxonomy_image" value="'.esc_url($image_url).'" /><br />
             <button class="z_upload_image_button button">' . __('Upload/Add image', 'categories-images') . '</button>
             <button class="z_remove_image_button button">' . __('Remove image', 'categories-images') . '</button>
             </td>
@@ -176,6 +181,9 @@ class ZCategoriesImages
                         <button class="z_upload_image_button button">' . __('Upload/Add image', 'categories-images') . '</button>
                         <button class="z_remove_image_button button">' . __('Remove image', 'categories-images') . '</button>
                     </span>
+                    <span class="input-text-wrap">
+                        <input type="hidden" name="zci_taxonomy_image_id" value="" />
+                    </span>
                 </label>
             </div>
         </fieldset>';
@@ -185,6 +193,9 @@ class ZCategoriesImages
         if(isset($_POST['zci_taxonomy_image'])) {
             update_option('z_taxonomy_image'.$term_id, $_POST['zci_taxonomy_image'], false);
         }
+        if(isset($_POST['zci_taxonomy_image_id'])) {
+            update_option('z_taxonomy_image_id'.$term_id, $_POST['zci_taxonomy_image_id'], false);
+        }
     }
 
     // get attachment ID by image url
@@ -193,6 +204,23 @@ class ZCategoriesImages
         $query = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE guid = %s", $image_src);
         $id = $wpdb->get_var($query);
         return (!empty($id)) ? $id : NULL;
+    }
+
+    // get attachment ID by term id
+    function zTaxonomyImageID($term_id = NULL) {
+        if (!$term_id) {
+            if (is_category())
+                $term_id = get_query_var('cat');
+            elseif (is_tag())
+                $term_id = get_query_var('tag_id');
+            elseif (is_tax()) {
+                $current_term = get_term_by('slug', get_query_var('term'), get_query_var('taxonomy'));
+                $term_id = $current_term->term_id;
+            }
+        }
+        
+        $taxonomy_image_id = get_option('z_taxonomy_image_id'.$term_id);
+        return $taxonomy_image_id;
     }
 
     // get taxonomy image url for the given term_id (Place holder image by default)
@@ -211,6 +239,9 @@ class ZCategoriesImages
         $taxonomy_image_url = get_option('z_taxonomy_image'.$term_id);
         if(!empty($taxonomy_image_url)) {
             $attachment_id = $this->zGetAttachmentIdByUrl($taxonomy_image_url);
+            if(empty($attachment_id)) {
+                $attachment_id = $this->zTaxonomyImageID($term_id);
+            }
             if(!empty($attachment_id)) {
                 $taxonomy_image_url = wp_get_attachment_image_src($attachment_id, $size);
                 $taxonomy_image_url = $taxonomy_image_url[0];
@@ -239,6 +270,9 @@ class ZCategoriesImages
         $taxonomy_image_url = get_option('z_taxonomy_image'.$term_id);
         if(!empty($taxonomy_image_url)) {
             $attachment_id = $this->zGetAttachmentIdByUrl($taxonomy_image_url);
+            if(empty($attachment_id)) {
+                $attachment_id = $this->zTaxonomyImageID($term_id);
+            }
             if(!empty($attachment_id))
                 $taxonomy_image = wp_get_attachment_image($attachment_id, $size, FALSE, $attr);
             else {
@@ -322,6 +356,11 @@ if (class_exists('ZCategoriesImages')) {
     function z_taxonomy_image_url($term_id = NULL, $size = 'full', $return_placeholder = FALSE) {
         $zci = new ZCategoriesImages();
         return $zci->zTaxonomyImageUrl($term_id, $size, $return_placeholder);
+    }
+
+    function z_taxonomy_image_id($term_id = NULL) {
+        $zci = new ZCategoriesImages();
+        return $zci->zTaxonomyImageID($term_id);
     }
 
     function z_taxonomy_image($term_id = NULL, $size = 'full', $attr = NULL, $echo = TRUE) {
