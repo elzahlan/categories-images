@@ -198,12 +198,33 @@ class ZCategoriesImages
         }
     }
 
-    // get attachment ID by image url
+    /**
+     * get attachment ID by image url
+     *
+     * @param string $image_src
+     * @return string|null
+     */
     function zGetAttachmentIdByUrl($image_src) {
+
         global $wpdb;
+
+        // Prepares a SQL query for safe execution.
         $query = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE guid = %s", $image_src);
-        $id = $wpdb->get_var($query);
-        return (!empty($id)) ? $id : NULL;
+
+        // Retrieves the cache contents from the cache by key and group, return mixed|false.
+        $id = wp_cache_get( 'z_get_attachment_id_by_url', 'categories-images' );
+
+        if( false === $id ) {
+            // Retrieves one variable from the database, return string|null.
+            $id = $wpdb->get_var($query);
+
+            if( null !== $id ) {
+                // Saves data in the cache with one hour expiration time.
+                wp_cache_set( 'z_get_attachment_id_by_url', $id, 'categories-images', HOUR_IN_SECONDS );
+            }
+        }
+
+        return $id;
     }
 
     // get attachment ID by term id
