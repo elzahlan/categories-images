@@ -56,6 +56,9 @@ class ZCategoriesImages
 
         // Elementor Dynamic Tag Registration
         add_action('elementor/dynamic_tags/register', [$this, 'zRegisterElementorTags']);
+
+        // Register REST API Field
+        add_action('rest_api_init', [$this, 'zInitRestApi']);
     }
 
     /**
@@ -426,6 +429,32 @@ class ZCategoriesImages
 
         // Register the tag
         $dynamic_tags->register( new ZCI_Elementor_Taxonomy_Image_Tag() );
+    }
+
+    // Register field 'z_taxonomy_image_url' to the WP REST API
+    function zInitRestApi() {
+        $taxonomies = get_taxonomies();
+        $zci_options = get_option('zci_options');
+        if (empty($zci_options['excluded_taxonomies']))
+            $zci_options['excluded_taxonomies'] = [];
+
+        foreach ($taxonomies as $taxonomy) {
+            if (in_array($taxonomy, $zci_options['excluded_taxonomies']))
+                continue;
+            
+            register_rest_field($taxonomy, 'z_taxonomy_image_url', [
+                'get_callback' => [$this, 'zGetTermImage'],
+                'update_callback' => null,
+                'schema' => null,
+            ]);
+        }
+    }
+
+    function zGetTermImage($object, $field_name, $request) {
+        $term_id = $object['id'];
+        $image_url = $this->zTaxonomyImageUrl($term_id, 'full', true);
+        
+        return $image_url;
     }
 }
 
