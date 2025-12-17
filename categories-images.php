@@ -212,11 +212,17 @@ class ZCategoriesImages
 
     function zTaxonomyColumns( $columns ) {
         $new_columns = [];
-        $new_columns['cb'] = $columns['cb'];
-        $new_columns['thumb'] = __('Image', 'categories-images');
 
-        unset( $columns['cb'] );
+        // Keep checkbox column if it exists
+        if ( isset( $columns['cb'] ) ) {
+            $new_columns['cb'] = $columns['cb'];
+            unset( $columns['cb'] );
+        }
 
+        // Add image column
+        $new_columns['thumb'] = __( 'Image', 'categories-images' );
+
+        // Merge back the rest of the columns
         return array_merge( $new_columns, $columns );
     }
 
