@@ -53,6 +53,9 @@ class ZCategoriesImages
 
         // Settings page link in plugins list
         add_filter("plugin_action_links_{$this->plugin_name}", [$this, 'zSettingsLink']);
+
+        // Elementor Dynamic Tag Registration
+        add_action('elementor/dynamic_tags/register', [$this, 'zRegisterElementorTags']);
     }
 
     /**
@@ -414,6 +417,16 @@ class ZCategoriesImages
         // Things will happen if the plugin deactivated.
         flush_rewrite_rules();
     }
+
+    function zRegisterElementorTags( $dynamic_tags ) {
+        // Include the tag class file
+        if ( ! class_exists( 'ZCI_Elementor_Taxonomy_Image_Tag' ) ) {
+            require_once plugin_dir_path( __FILE__ ) . 'includes/elementor-integration.php';
+        }
+
+        // Register the tag
+        $dynamic_tags->register( new ZCI_Elementor_Taxonomy_Image_Tag() );
+    }
 }
 
 if (class_exists('ZCategoriesImages')) {
@@ -424,8 +437,6 @@ if (class_exists('ZCategoriesImages')) {
     register_activation_hook(__FILE__, [$z_categories_images, 'activate']);
 
     // After deactivating the plugin
-    // Note: Deactivation usually needs a static callback or global instance if the class is not static.
-    // The previous code had it as an array callback to an instance. We keep it as is.
     register_deactivation_hook(__FILE__, [$z_categories_images, 'deactivate']);
     
     function z_taxonomy_image_url($term_id = NULL, $size = 'full', $return_placeholder = FALSE) {
