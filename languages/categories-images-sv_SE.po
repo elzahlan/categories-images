@@ -27,8 +27,8 @@ msgid "Categories Images"
 msgstr "Kategoribilder"
 
 #. URI of the plugin
-msgid "http://zahlan.net/blog/2012/06/categories-images"
-msgstr "http://zahlan.net/blog/2012/06/categories-images"
+msgid "https://zahlan.net/blog/2012/06/categories-images"
+msgstr "https://zahlan.net/blog/2012/06/categories-images"
 
 #. Description of the plugin
 msgid ""
@@ -42,8 +42,8 @@ msgid "Muhammad Said El Zahlan"
 msgstr "Muhammad Said El Zahlan"
 
 #. Author URI of the plugin
-msgid "http://zahlan.net"
-msgstr "http://zahlan.net"
+msgid "https://zahlan.net"
+msgstr "https://zahlan.net"
 
 #: ../../plugins/categories-images/categories-images.php:61 ../..
 #: plugins/categories-images/categories-images.php:82 ../../plugins/categories-

@@ -20,7 +20,7 @@ Also from settings menu you can exclude any taxonomies from the plugin to avoid 
 
 ### Documentation ###
 
-Go to [http://zahlan.net/blog/2012/06/categories-images/](http://zahlan.net/blog/2012/06/categories-images/)
+Go to [https://zahlan.net/blog/2012/06/categories-images/](https://zahlan.net/blog/2012/06/categories-images/)
 
 ## Installation ##
 
@@ -43,7 +43,7 @@ You're done! The plugin is ready to use, for more please check the plugin descri
 ## Frequently Asked Questions ##
 
 Please check the documentation page:
-[http://zahlan.net/blog/2012/06/categories-images/](http://zahlan.net/blog/2012/06/categories-images/)
+[https://zahlan.net/blog/2012/06/categories-images/](https://zahlan.net/blog/2012/06/categories-images/)
 
 ## Changelog ##
 
