@@ -1,6 +1,98 @@
-/* Thumbnail style */
-th.column-thumb {width:60px;}
-.form-field img.zci-taxonomy-image {border:1px solid #eee;max-width:300px;max-height:300px;}
-.inline-edit-row fieldset .thumb label span.title {width:48px;height:48px;border:1px solid #eee;display:inline-block;}
-.column-thumb span {width:48px;height:48px;border:1px solid #eee;display:inline-block;}
-.inline-edit-row fieldset .thumb img,.column-thumb img {width:48px;height:48px;}
+/* Categories Images Frontend Styles */
+
+/* Grid Layout */
+.zci-taxonomy-list.zci-grid {
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: repeat(var(--zci-columns, 3), 1fr);
+    list-style: none;
+    /* Remove bullets */
+    padding: 0;
+    margin: 0;
+}
+
+.zci-taxonomy-list.zci-grid .zci-item {
+    text-align: center;
+    list-style: none;
+    /* Ensure no bullets on items */
+    margin: 0;
+}
+
+.zci-taxonomy-list.zci-grid .zci-image {
+    display: block;
+    margin-bottom: 10px;
+    overflow: hidden;
+    /* For hover effect */
+    border-radius: 8px;
+    /* Nicer corners */
+}
+
+.zci-taxonomy-list.zci-grid .zci-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    transition: transform 0.3s ease;
+    /* Smooth hover */
+}
+
+.zci-taxonomy-list.zci-grid .zci-image img:hover {
+    transform: scale(1.05);
+    /* Subtle zoom effect */
+}
+
+/* Inline Layout */
+.zci-taxonomy-list.zci-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.zci-taxonomy-list.zci-inline .zci-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0;
+}
+
+/* List Layout (Default) */
+.zci-taxonomy-list.zci-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.zci-taxonomy-list.zci-list .zci-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+/* Common */
+.zci-term-name {
+    display: block;
+    font-weight: bold;
+    margin-top: 5px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.zci-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.zci-term-count {
+    display: inline-block;
+    background: #f0f0f1;
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 0.8em;
+    margin-left: 5px;
+    vertical-align: middle;
+}

@@ -1,0 +1,94 @@
+/* Admin Settings Page Styles */
+
+.zci-settings-wrap .zci-container {
+    max-width: 1000px;
+    margin-top: 20px;
+}
+
+.zci-card {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    /* Standard WP radius */
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+}
+
+.zci-card h2 {
+    font-size: 1.3em;
+    margin-top: 0;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f1;
+}
+
+.zci-card h3 {
+    margin-top: 20px;
+    font-size: 1.1em;
+}
+
+/* Form refinement */
+.zci-card form p.description {
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.zci-card input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.zci-submit-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f1;
+}
+
+/* Documentation Tables */
+.zci-documentation table.widefat {
+    border: none;
+    box-shadow: none;
+    background: #f9f9f9;
+}
+
+.zci-documentation table.widefat td,
+.zci-documentation table.widefat th {
+    padding: 10px;
+}
+
+.zci-documentation code {
+    background: #f0f0f1;
+    padding: 3px 5px;
+    border-radius: 3px;
+}
+
+/* Original Thumbnail Styles (Backend) */
+th.column-thumb {
+    width: 60px;
+}
+
+.form-field img.zci-taxonomy-image {
+    border: 1px solid #eee;
+    max-width: 300px;
+    max-height: 300px;
+}
+
+.inline-edit-row fieldset .thumb label span.title {
+    width: 48px;
+    height: 48px;
+    border: 1px solid #eee;
+    display: inline-block;
+}
+
+.column-thumb span {
+    width: 48px;
+    height: 48px;
+    border: 1px solid #eee;
+    display: inline-block;
+}
+
+.inline-edit-row fieldset .thumb img,
+.column-thumb img {
+    width: 48px;
+    height: 48px;
+}

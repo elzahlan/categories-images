@@ -8,7 +8,7 @@
  * Plugin URI: http://zahlan.net/blog/categories-images/
  * Description: Categories Images Plugin allow you to add an image to category or any custom term.
  * Author: Muhammad El Zahlan
- * Version: 3.2.0
+ * Version: 3.2.1
  * Author URI: http://zahlan.net/
  * Domain Path: /languages
  * Text Domain: categories-images
@@ -20,6 +20,9 @@ if (!defined('ABSPATH'))
 
 if (!defined('Z_PLUGIN_URL'))
     define('Z_PLUGIN_URL', untrailingslashit(plugins_url('', __FILE__)));
+
+if (!defined('ZCI_VERSION'))
+    define('ZCI_VERSION', '3.2.1');
 
 class ZCategoriesImages
 {
@@ -42,6 +45,7 @@ class ZCategoriesImages
 
         // The placeholder image url
         $this->zci_placeholder = plugins_url('/assets/images/placeholder.png', __FILE__);
+        add_action('init', [$this, 'zInit']);
         add_action('admin_init', [$this, 'zAdminInit']);
 
         // save our taxonomy image while edit or create term
@@ -59,6 +63,9 @@ class ZCategoriesImages
 
         // Register REST API Field
         add_action('rest_api_init', [$this, 'zInitRestApi']);
+
+        // Enqueue frontend styles
+        add_action('wp_enqueue_scripts', [$this, 'zPublicEnqueue']);
     }
 
     /**
@@ -156,6 +163,12 @@ class ZCategoriesImages
         add_settings_field('z_excluded_taxonomies', __('Excluded Taxonomies', 'categories-images'), [$this, 'zExcludedTaxonomies'], 'zci-options', 'zci_settings');
     }
 
+    function zInit() {
+        // Register Shortcodes
+        add_shortcode('z_taxonomy_image', [$this, 'z_taxonomy_image_shortcode']);
+        add_shortcode('z_taxonomy_list', [$this, 'z_taxonomy_list_shortcode']);
+    }
+
     function zDeleteTaxonomyData($tt_id) {
         // delete_term_meta handles itself, but for backward compatibility with options:
         if ( ! function_exists( 'delete_term_meta' ) ) {
@@ -165,14 +178,18 @@ class ZCategoriesImages
     }
 
     function zAdminEnqueue() {
-        wp_enqueue_style('categories-images-styles', plugins_url('/assets/css/zci-styles.css', __FILE__));
-        wp_enqueue_script('categories-images-scripts', plugins_url('/assets/js/zci-scripts.js', __FILE__));
+        wp_enqueue_style('categories-images-admin-styles', plugins_url('/assets/css/zci-admin.css', __FILE__), [], ZCI_VERSION);
+        wp_enqueue_script('categories-images-scripts', plugins_url('/assets/js/zci-scripts.js', __FILE__), [], ZCI_VERSION);
 
         $zci_js_config = [
             'wordpress_ver' => get_bloginfo("version"),
             'placeholder' => $this->zci_placeholder
         ];
         wp_localize_script('categories-images-scripts', 'zci_config', $zci_js_config);
+    }
+    
+    function zPublicEnqueue() {
+        wp_enqueue_style('categories-images-styles', plugins_url('/assets/css/zci-styles.css', __FILE__), [], ZCI_VERSION);
     }
 
     // add image field in add form
@@ -381,18 +398,22 @@ class ZCategoriesImages
     }
 
     function zSettingsMenu() {
-        add_menu_page(__('Categories Images settings', 'categories-images'), __('Categories Images', 'categories-images'), 'manage_options', 'zci_settings', [$this, 'zSettingsPage'], 'dashicons-format-image', 80);
+        add_options_page(__('Categories Images settings', 'categories-images'), __('Categories Images', 'categories-images'), 'manage_options', 'zci_settings', [$this, 'zSettingsPage']);
     }
 
     // Plugin option page
     function zSettingsPage() {
         if (!current_user_can('manage_options'))
             wp_die(__( 'You do not have sufficient permissions to access this page.', 'categories-images'));
+        
+        // Enqueue admin styles for settings page if not already there
+        wp_enqueue_style('categories-images-admin-styles', plugins_url('/assets/css/zci-admin.css', __FILE__));
+        
         require_once plugin_dir_path(__FILE__).'templates/admin.php';
     }
 
     function zSettingsLink($links) {
-        $settings_link = '<a href="admin.php?page=zci_settings">Settings</a>';
+        $settings_link = '<a href="options-general.php?page=zci_settings">Settings</a>';
         array_push($links, $settings_link);
         return $links;
     }
@@ -455,6 +476,155 @@ class ZCategoriesImages
         $image_url = $this->zTaxonomyImageUrl($term_id, 'full', true);
         
         return $image_url;
+    }
+
+    /**
+     * Shortcode [z_taxonomy_image]
+     */
+    function z_taxonomy_image_shortcode($atts) {
+        $atts = shortcode_atts([
+            'term_id'  => '',
+            'taxonomy' => 'category',
+            'size'     => 'full',
+            'class'    => '',
+            'default'  => '',
+            'link'     => 'no', // yes, no, custom_url
+            'format'   => 'img' // img, url
+        ], $atts);
+
+        $term_id = $atts['term_id'];
+
+        // If no term_id, try to detect
+        if (empty($term_id)) {
+            $term_id = get_queried_object_id();
+        }
+
+        // Output logic
+        if ($atts['format'] === 'url') {
+            $url = $this->zTaxonomyImageUrl($term_id, $atts['size'], true);
+            if ($url == $this->zci_placeholder && !empty($atts['default'])) {
+                return $atts['default'];
+            }
+            return $url;
+        }
+
+        $image = $this->zTaxonomyImage($term_id, $atts['size'], ['class' => $atts['class']], false);
+        
+        // Handle empty/placeholder
+        if (empty($image) || strpos($image, 'placeholder.png') !== false) {
+             if (!empty($atts['default'])) {
+                 $image = '<img src="' . esc_url($atts['default']) . '" class="' . esc_attr($atts['class']) . '" />';
+             }
+        }
+
+        // Link wrapping
+        if ($atts['link'] === 'yes') {
+             $term_link = get_term_link((int)$term_id, $atts['taxonomy']);
+             if (!is_wp_error($term_link)) {
+                 $image = '<a href="' . esc_url($term_link) . '">' . $image . '</a>';
+             }
+        } elseif ($atts['link'] !== 'no') {
+             // custom URL
+             $image = '<a href="' . esc_url($atts['link']) . '">' . $image . '</a>';
+        }
+
+        return $image;
+    }
+
+    /**
+     * Shortcode [z_taxonomy_list]
+     */
+    function z_taxonomy_list_shortcode($atts) {
+        $atts = shortcode_atts([
+            'taxonomy'   => 'category',
+            'post_id'    => '',
+            'include'    => '',
+            'exclude'    => '',
+            'parent'     => '',
+            'orderby'    => 'name',
+            'order'      => 'ASC',
+            'hide_empty' => 'yes',
+            'size'       => 'full',
+            'style'      => 'list', // list, grid, inline
+            'columns'    => '3',
+            'show_name'  => 'no',
+            'show_count' => 'no',
+            'format'     => 'img'
+        ], $atts);
+
+        // Get Terms
+        $args = [
+            'taxonomy' => $atts['taxonomy'],
+            'orderby' => $atts['orderby'],
+            'order' => $atts['order'],
+            'hide_empty' => ($atts['hide_empty'] === 'yes'),
+        ];
+
+        if (!empty($atts['include'])) {
+            $args['include'] = explode(',', $atts['include']);
+        }
+        if (!empty($atts['exclude'])) {
+            $args['exclude'] = explode(',', $atts['exclude']);
+        }
+        if ($atts['parent'] !== '') {
+            $args['parent'] = (int)$atts['parent'];
+        }
+
+        $terms = [];
+        if (!empty($atts['post_id'])) {
+            $pid = ($atts['post_id'] === 'current') ? get_the_ID() : (int)$atts['post_id'];
+            $terms = get_the_terms($pid, $atts['taxonomy']);
+        } else {
+            $terms = get_terms($args);
+        }
+
+        if (empty($terms) || is_wp_error($terms)) {
+            return '';
+        }
+
+        if ($atts['format'] === 'array') {
+            return '<pre>' . print_r($terms, true) . '</pre>';
+        }
+
+        // CSS Classes
+        $classes = 'zci-taxonomy-list zci-' . $atts['style'];
+
+        // Grid Styles
+        $style_attr = '';
+        if ($atts['style'] === 'grid') {
+             $style_attr = 'style="--zci-columns: ' . intval($atts['columns']) . ';"';
+        }
+
+        $output = '<ul class="' . esc_attr($classes) . '" ' . $style_attr . '>';
+        
+        foreach ($terms as $term) {
+            $image = $this->zTaxonomyImage($term->term_id, $atts['size'], ['class' => 'zci-img'], false);
+
+            // Skip if no image and no name to show
+            if (empty($image) && $atts['show_name'] !== 'yes') {
+                continue;
+            }
+
+            $link = get_term_link($term);
+            
+            $output .= '<li class="zci-item">';
+            $output .= '<a href="' . esc_url($link) . '" class="zci-link">';
+            $output .= '<span class="zci-image">' . $image . '</span>';
+            
+            if ($atts['show_name'] === 'yes') {
+                 $output .= '<span class="zci-term-name">' . esc_html($term->name);
+                 if ($atts['show_count'] === 'yes') {
+                     $output .= ' <span class="zci-term-count">(' . $term->count . ')</span>';
+                 }
+                 $output .= '</span>';
+            }
+            $output .= '</a>';
+            $output .= '</li>';
+        }
+
+        $output .= '</ul>';
+
+        return $output;
     }
 }
 
