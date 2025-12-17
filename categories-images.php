@@ -8,7 +8,7 @@
  * Plugin URI: http://zahlan.net/blog/categories-images/
  * Description: Categories Images Plugin allow you to add an image to category or any custom term.
  * Author: Muhammad El Zahlan
- * Version: 3.1.0
+ * Version: 3.2.0
  * Author URI: http://zahlan.net/
  * Domain Path: /languages
  * Text Domain: categories-images
@@ -25,8 +25,19 @@ class ZCategoriesImages
 {
     public $plugin_name;
     private $zci_placeholder;
+    private static $instance = null;
 
-    function __construct() {
+    /**
+     * Singleton instance
+     */
+    public static function get_instance() {
+        if ( null == self::$instance ) {
+            self::$instance = new self;
+        }
+        return self::$instance;
+    }
+
+    private function __construct() {
         $this->plugin_name = plugin_basename(__FILE__);
 
         // The placeholder image url
@@ -44,16 +55,74 @@ class ZCategoriesImages
         add_filter("plugin_action_links_{$this->plugin_name}", [$this, 'zSettingsLink']);
     }
 
+    /**
+     * Abstraction for retrieving term metadata
+     */
+    public function zci_get_term_meta( $term_id, $key ) {
+        if ( function_exists( 'get_term_meta' ) ) {
+            return get_term_meta( $term_id, $key, true );
+        } else {
+            return get_option( $key . $term_id );
+        }
+    }
+
+    /**
+     * Abstraction for updating term metadata
+     */
+    public function zci_update_term_meta( $term_id, $key, $value ) {
+        if ( function_exists( 'update_term_meta' ) ) {
+            return update_term_meta( $term_id, $key, $value );
+        } else {
+            return update_option( $key . $term_id, $value );
+        }
+    }
+
+    /**
+     * Abstraction for deleting term metadata
+     */
+    public function zci_delete_term_meta( $term_id, $key ) {
+        if ( function_exists( 'delete_term_meta' ) ) {
+            return delete_term_meta( $term_id, $key );
+        } else {
+            return delete_option( $key . $term_id );
+        }
+    }
+
     function zAdminInit() {
+        // Migration Routine: Move data from options to term_meta if supported and not yet done
+        if ( function_exists( 'get_term_meta' ) && ! get_option( 'zci_migrated_to_termmeta' ) ) {
+            $taxonomies = get_taxonomies();
+            foreach ( $taxonomies as $taxonomy ) {
+                $terms = get_terms( $taxonomy, ['hide_empty' => false] );
+                if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
+                    foreach ( $terms as $term ) {
+                        // Check for old option data
+                        $app_option_url = get_option( 'z_taxonomy_image' . $term->term_id );
+                        $app_option_id  = get_option( 'z_taxonomy_image_id' . $term->term_id );
+
+                        if ( $app_option_url !== false ) {
+                            update_term_meta( $term->term_id, 'z_taxonomy_image', $app_option_url );
+                            delete_option( 'z_taxonomy_image' . $term->term_id );
+                        }
+                        if ( $app_option_id !== false ) {
+                            update_term_meta( $term->term_id, 'z_taxonomy_image_id', $app_option_id );
+                            delete_option( 'z_taxonomy_image_id' . $term->term_id );
+                        }
+                    }
+                }
+            }
+            update_option( 'zci_migrated_to_termmeta', 1 );
+        }
+
         $z_taxonomies = get_taxonomies();
         if (is_array($z_taxonomies)) {
             $zci_options = get_option('zci_options');
             
             if (!is_array($zci_options))
-                $zci_options = array();
+                $zci_options = [];
             
             if (empty($zci_options['excluded_taxonomies']))
-                $zci_options['excluded_taxonomies'] = array();
+                $zci_options['excluded_taxonomies'] = [];
             
             foreach ($z_taxonomies as $z_taxonomy) {
                 if (in_array($z_taxonomy, $zci_options['excluded_taxonomies']))
@@ -64,10 +133,8 @@ class ZCategoriesImages
                 add_filter('manage_'.$z_taxonomy.'_custom_column', [$this, 'zTaxonomyColumn'], 10, 3 );
 
                 // If tax is deleted
-                add_action("delete_{$z_taxonomy}", function($tt_id) {
-                    delete_option('z_taxonomy_image'.$tt_id);
-                    delete_option('z_taxonomy_image_id'.$tt_id);
-                });
+                // Note: term_meta deletes automatically when term is deleted in WP 4.4+, but we need to handle fallback.
+                add_action("delete_{$z_taxonomy}", [$this, 'zDeleteTaxonomyData']);
             }
         }
 
@@ -83,6 +150,14 @@ class ZCategoriesImages
         add_settings_field('z_excluded_taxonomies', __('Excluded Taxonomies', 'categories-images'), [$this, 'zExcludedTaxonomies'], 'zci-options', 'zci_settings');
     }
 
+    function zDeleteTaxonomyData($tt_id) {
+        // delete_term_meta handles itself, but for backward compatibility with options:
+        if ( ! function_exists( 'delete_term_meta' ) ) {
+            delete_option('z_taxonomy_image'.$tt_id);
+            delete_option('z_taxonomy_image_id'.$tt_id);
+        }
+    }
+
     function zAdminEnqueue() {
         wp_enqueue_style('categories-images-styles', plugins_url('/assets/css/zci-styles.css', __FILE__));
         wp_enqueue_script('categories-images-scripts', plugins_url('/assets/js/zci-scripts.js', __FILE__));
@@ -96,14 +171,12 @@ class ZCategoriesImages
 
     // add image field in add form
     function zAddTexonomyField() {
-        if (get_bloginfo('version') >= 3.5)
-            wp_enqueue_media();
-        else {
-            wp_enqueue_style('thickbox');
-            wp_enqueue_script('thickbox');
-        }
+        wp_enqueue_media();
+        
+        $nonce = wp_create_nonce( 'zci_save_image' );
         
         echo '<div class="form-field">
+            <input type="hidden" name="zci_nonce" value="' . $nonce . '" />
             <input type="hidden" name="zci_taxonomy_image_id" id="zci_taxonomy_image_id" value="" />
             <label for="zci_taxonomy_image">' . __('Image', 'categories-images') . '</label>
             <input type="text" name="zci_taxonomy_image" id="zci_taxonomy_image" value="" />
@@ -114,12 +187,7 @@ class ZCategoriesImages
 
     // add image field in edit form
     function zEditTexonomyField($taxonomy) {
-        if (get_bloginfo('version') >= 3.5)
-            wp_enqueue_media();
-        else {
-            wp_enqueue_style('thickbox');
-            wp_enqueue_script('thickbox');
-        }
+        wp_enqueue_media();
         
         if ($this->zTaxonomyImageUrl( $taxonomy->term_id, NULL, TRUE ) == $this->zci_placeholder) {
             $image_url = "";
@@ -128,24 +196,22 @@ class ZCategoriesImages
             $image_url = $this->zTaxonomyImageUrl( $taxonomy->term_id, NULL, TRUE );
             $image_id  = $this->zTaxonomyImageID( $taxonomy->term_id );
         }
+        
+        $nonce = wp_create_nonce( 'zci_save_image' );
+
         echo '<tr class="form-field">
             <th scope="row" valign="top"><label for="zci_taxonomy_image">' . __('Image', 'categories-images') . '</label></th>
-            <td><input type="hidden" name="zci_taxonomy_image_id" id="zci_taxonomy_image_id" value="'.esc_attr($image_id).'" /><img class="zci-taxonomy-image" src="' . esc_url( $this->zTaxonomyImageUrl( $taxonomy->term_id, 'medium', TRUE ) ) . '"/><br/><input type="text" name="zci_taxonomy_image" id="zci_taxonomy_image" value="'.esc_url($image_url).'" /><br />
+            <td>
+            <input type="hidden" name="zci_nonce" value="' . $nonce . '" />
+            <input type="hidden" name="zci_taxonomy_image_id" id="zci_taxonomy_image_id" value="'.esc_attr($image_id).'" /><img class="zci-taxonomy-image" src="' . esc_url( $this->zTaxonomyImageUrl( $taxonomy->term_id, 'medium', TRUE ) ) . '"/><br/><input type="text" name="zci_taxonomy_image" id="zci_taxonomy_image" value="'.esc_url($image_url).'" /><br />
             <button class="z_upload_image_button button">' . __('Upload/Add image', 'categories-images') . '</button>
             <button class="z_remove_image_button button">' . __('Remove image', 'categories-images') . '</button>
             </td>
         </tr>';
     }
 
-    /**
-     * Thumbnail column added to category admin.
-     *
-     * @access public
-     * @param mixed $columns
-     * @return void
-     */
     function zTaxonomyColumns( $columns ) {
-        $new_columns = array();
+        $new_columns = [];
         $new_columns['cb'] = $columns['cb'];
         $new_columns['thumb'] = __('Image', 'categories-images');
 
@@ -154,15 +220,6 @@ class ZCategoriesImages
         return array_merge( $new_columns, $columns );
     }
 
-    /**
-     * Thumbnail column value added to category admin.
-     *
-     * @access public
-     * @param mixed $columns
-     * @param mixed $column
-     * @param mixed $id
-     * @return void
-     */
     function zTaxonomyColumn( $columns, $column, $id ) {
         if ( $column == 'thumb' )
             $columns = '<span><img src="' . $this->zTaxonomyImageUrl($id, 'thumbnail', TRUE) . '" alt="' . __('Thumbnail', 'categories-images') . '" class="wp-post-image" /></span>';
@@ -171,13 +228,15 @@ class ZCategoriesImages
     }
 
     function zQuickEditCustomBox($column_name, $screen, $name) {
-        if ($column_name == 'thumb') 
+        if ($column_name == 'thumb') {
+            $nonce = wp_create_nonce( 'zci_save_image' );
             echo '<fieldset>
             <div class="thumb inline-edit-col">
                 <label>
                     <span class="title"><img src="" alt="Thumbnail"/></span>
                     <span class="input-text-wrap"><input type="text" name="zci_taxonomy_image" value="" class="tax_list" /></span>
                     <span class="input-text-wrap">
+                        <input type="hidden" name="zci_nonce" value="' . $nonce . '" />
                         <button class="z_upload_image_button button">' . __('Upload/Add image', 'categories-images') . '</button>
                         <button class="z_remove_image_button button">' . __('Remove image', 'categories-images') . '</button>
                     </span>
@@ -187,14 +246,20 @@ class ZCategoriesImages
                 </label>
             </div>
         </fieldset>';
+        }
     }
 
     function zSaveTaxonomyImage($term_id) {
+        // Security check
+        if ( ! isset( $_POST['zci_nonce'] ) || ! wp_verify_nonce( $_POST['zci_nonce'], 'zci_save_image' ) ) {
+            return;
+        }
+
         if(isset($_POST['zci_taxonomy_image'])) {
-            update_option('z_taxonomy_image'.$term_id, $_POST['zci_taxonomy_image'], false);
+            $this->zci_update_term_meta($term_id, 'z_taxonomy_image', esc_url_raw($_POST['zci_taxonomy_image']));
         }
         if(isset($_POST['zci_taxonomy_image_id'])) {
-            update_option('z_taxonomy_image_id'.$term_id, $_POST['zci_taxonomy_image_id'], false);
+            $this->zci_update_term_meta($term_id, 'z_taxonomy_image_id', absint($_POST['zci_taxonomy_image_id']));
         }
     }
 
@@ -219,8 +284,7 @@ class ZCategoriesImages
             }
         }
         
-        $taxonomy_image_id = get_option('z_taxonomy_image_id'.$term_id);
-        return $taxonomy_image_id;
+        return $this->zci_get_term_meta($term_id, 'z_taxonomy_image_id');
     }
 
     // get taxonomy image url for the given term_id (Place holder image by default)
@@ -236,7 +300,8 @@ class ZCategoriesImages
             }
         }
         
-        $taxonomy_image_url = get_option('z_taxonomy_image'.$term_id);
+        $taxonomy_image_url = $this->zci_get_term_meta($term_id, 'z_taxonomy_image');
+        
         if(!empty($taxonomy_image_url)) {
             $attachment_id = $this->zGetAttachmentIdByUrl($taxonomy_image_url);
             if(empty($attachment_id)) {
@@ -267,7 +332,8 @@ class ZCategoriesImages
             }
         }
         
-        $taxonomy_image_url = get_option('z_taxonomy_image'.$term_id);
+        $taxonomy_image_url = $this->zci_get_term_meta($term_id, 'z_taxonomy_image');
+        
         if(!empty($taxonomy_image_url)) {
             $attachment_id = $this->zGetAttachmentIdByUrl($taxonomy_image_url);
             if(empty($attachment_id)) {
@@ -345,26 +411,29 @@ class ZCategoriesImages
 }
 
 if (class_exists('ZCategoriesImages')) {
-    $z_categories_images = new ZCategoriesImages();
+    // Instantiate the class via Singleton
+    $z_categories_images = ZCategoriesImages::get_instance();
 
     // After activating the plugin
     register_activation_hook(__FILE__, [$z_categories_images, 'activate']);
 
     // After deactivating the plugin
+    // Note: Deactivation usually needs a static callback or global instance if the class is not static.
+    // The previous code had it as an array callback to an instance. We keep it as is.
     register_deactivation_hook(__FILE__, [$z_categories_images, 'deactivate']);
     
     function z_taxonomy_image_url($term_id = NULL, $size = 'full', $return_placeholder = FALSE) {
-        $zci = new ZCategoriesImages();
+        $zci = ZCategoriesImages::get_instance();
         return $zci->zTaxonomyImageUrl($term_id, $size, $return_placeholder);
     }
 
     function z_taxonomy_image_id($term_id = NULL) {
-        $zci = new ZCategoriesImages();
+        $zci = ZCategoriesImages::get_instance();
         return $zci->zTaxonomyImageID($term_id);
     }
 
     function z_taxonomy_image($term_id = NULL, $size = 'full', $attr = NULL, $echo = TRUE) {
-        $zci = new ZCategoriesImages();
+        $zci = ZCategoriesImages::get_instance();
         return $zci->zTaxonomyImage($term_id, $size, $attr, $echo);
     }
 }

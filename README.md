@@ -3,11 +3,11 @@ Wordpress Plugin
 
 **Contributors:** Muhammad El Zahlan (elzahlan)
 
-**Requires at least:** Wordpress 2.8
+**Requires at least:** Wordpress 4.0
 
-**Tested up to:** Wordpress 6.2.2
+**Tested up to:** Wordpress 6.9
 
-**Stable tag:** 3.1.0
+**Stable tag:** 3.2.0
 
 ## Description ##
 
@@ -46,6 +46,12 @@ Please check the documentation page:
 [http://zahlan.net/blog/2012/06/categories-images/](http://zahlan.net/blog/2012/06/categories-images/)
 
 ## Changelog ##
+
+### 3.2.0 ###
+* Fix wp_options bloat issues by migrating to Term Meta API (wp_termmeta) for WP 4.4+.
+* Backward compatibility for WP < 4.4 maintained via wp_options fallback.
+* Improved performance by implementing Singleton pattern to reduce class instantiation overhead.
+* Security enhancements (nonce verification, input sanitization).
 
 ### 3.1.0 ###
 * Added DE translation, thanks to denarie.
