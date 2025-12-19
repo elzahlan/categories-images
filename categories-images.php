@@ -482,15 +482,21 @@ class ZCategoriesImages
      * Shortcode [z_taxonomy_image]
      */
     function z_taxonomy_image_shortcode($atts) {
+        $raw_atts = $atts;
         $atts = shortcode_atts([
             'term_id'  => '',
             'taxonomy' => 'category',
             'size'     => 'full',
             'class'    => '',
-            'default'  => '',
+            'default'  => null,
             'link'     => 'no', // yes, no, custom_url
             'format'   => 'img' // img, url
         ], $atts);
+
+        // Handle positional 'default' attribute
+        if (is_array($raw_atts) && in_array('default', $raw_atts, true)) {
+            $atts['default'] = "";
+        }
 
         $term_id = $atts['term_id'];
 
@@ -502,8 +508,14 @@ class ZCategoriesImages
         // Output logic
         if ($atts['format'] === 'url') {
             $url = $this->zTaxonomyImageUrl($term_id, $atts['size'], true);
-            if ($url == $this->zci_placeholder && !empty($atts['default'])) {
-                return $atts['default'];
+            if ($url == $this->zci_placeholder) {
+                if ($atts['default'] === "") {
+                    return $this->zci_placeholder;
+                } elseif (!empty($atts['default'])) {
+                    return $atts['default'];
+                } elseif (is_null($atts['default'])) {
+                    return ''; // No placeholder by default
+                }
             }
             return $url;
         }
@@ -512,8 +524,12 @@ class ZCategoriesImages
         
         // Handle empty/placeholder
         if (empty($image) || strpos($image, 'placeholder.png') !== false) {
-             if (!empty($atts['default'])) {
+             if ($atts['default'] === "") {
+                 $image = '<img src="' . esc_url($this->zci_placeholder) . '" class="' . esc_attr($atts['class']) . '" />';
+             } elseif (!empty($atts['default'])) {
                  $image = '<img src="' . esc_url($atts['default']) . '" class="' . esc_attr($atts['class']) . '" />';
+             } else {
+                 $image = '';
              }
         }
 
