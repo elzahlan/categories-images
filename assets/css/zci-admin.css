@@ -161,3 +161,27 @@ th.column-thumb {
     width: 48px;
     height: 48px;
 }
+
+/* Footer styles */
+.zci-footer {
+    margin-top: 40px;
+    padding: 20px 0;
+    border-top: 1px solid #dcdcde;
+    color: #646970;
+}
+
+.zci-footer p {
+    margin: 0;
+    font-size: 13px;
+    font-style: italic;
+}
+
+.zci-footer a {
+    color: #0073aa;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.zci-footer a:hover {
+    color: #2271b1;
+}

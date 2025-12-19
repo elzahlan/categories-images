@@ -265,6 +265,10 @@ $active_subtab = isset($_GET['subtab']) ? $_GET['subtab'] : 'php';
             </div>
         </div>
     </div>
+
+    <footer class="zci-footer">
+        <p><?php printf(__('Plugin developed and supported by %s', 'categories-images'), '<a href="https://zahlan.net" target="_blank">Zahlan</a>'); ?></p>
+    </footer>
 </div>
 
 <script type="text/javascript">
