@@ -7,7 +7,7 @@ Wordpress Plugin
 
 **Tested up to:** Wordpress 6.9
 
-**Stable tag:** 3.2.0
+**Stable tag:** 3.2.1
 
 ## Description ##
 

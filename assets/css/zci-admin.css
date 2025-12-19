@@ -5,6 +5,17 @@
     margin-top: 20px;
 }
 
+.zci-version-tag {
+    background: #0073aa;
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    vertical-align: middle;
+    margin-left: 10px;
+    font-weight: normal;
+}
+
 .zci-card {
     background: #fff;
     border: 1px solid #c3c4c7;
@@ -24,8 +35,14 @@
 }
 
 .zci-card h3 {
-    margin-top: 20px;
+    margin-top: 25px;
+    margin-bottom: 15px;
     font-size: 1.1em;
+}
+
+.zci-card h4 {
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 /* Form refinement */
@@ -44,7 +61,41 @@
     border-top: 1px solid #f0f0f1;
 }
 
-/* Documentation Tables */
+/* Documentation Styles */
+.zci-documentation code {
+    background: #f0f0f1;
+    padding: 3px 5px;
+    border-radius: 3px;
+    font-family: Consolas, Monaco, monospace;
+}
+
+.zci-documentation pre {
+    background: #272822;
+    color: #f8f8f2;
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 15px 0;
+}
+
+.zci-documentation pre code {
+    background: transparent;
+    padding: 0;
+    color: inherit;
+}
+
+.zci-function-doc {
+    margin-bottom: 25px;
+    padding-left: 15px;
+    border-left: 3px solid #0073aa;
+}
+
+.zci-documentation hr {
+    margin: 30px 0;
+    border: 0;
+    border-top: 1px solid #f0f0f1;
+}
+
 .zci-documentation table.widefat {
     border: none;
     box-shadow: none;
@@ -54,12 +105,6 @@
 .zci-documentation table.widefat td,
 .zci-documentation table.widefat th {
     padding: 10px;
-}
-
-.zci-documentation code {
-    background: #f0f0f1;
-    padding: 3px 5px;
-    border-radius: 3px;
 }
 
 /* Original Thumbnail Styles (Backend) */
