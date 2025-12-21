@@ -8,7 +8,7 @@
  * Plugin URI: https://zahlan.net/blog/categories-images/
  * Description: Categories Images Plugin allow you to add an image to category or any custom term.
  * Author: Muhammad El Zahlan
- * Version: 3.3.0
+ * Version: 3.3.1
  * Author URI: https://zahlan.net/
  * Domain Path: /languages
  * Text Domain: categories-images
@@ -22,7 +22,7 @@ if (!defined('Z_PLUGIN_URL'))
     define('Z_PLUGIN_URL', untrailingslashit(plugins_url('', __FILE__)));
 
 if (!defined('ZCI_VERSION'))
-    define('ZCI_VERSION', '3.3.0');
+    define('ZCI_VERSION', '3.3.1');
 
 class ZCategoriesImages
 {
@@ -129,12 +129,9 @@ class ZCategoriesImages
 
         $z_taxonomies = get_taxonomies();
         if (is_array($z_taxonomies)) {
-            $zci_options = get_option('zci_options');
+            $zci_options = (array) get_option('zci_options', []);
             
-            if (!is_array($zci_options))
-                $zci_options = [];
-            
-            if (empty($zci_options['excluded_taxonomies']))
+            if (empty($zci_options['excluded_taxonomies']) || !is_array($zci_options['excluded_taxonomies']))
                 $zci_options['excluded_taxonomies'] = [];
             
             foreach ($z_taxonomies as $z_taxonomy) {
@@ -425,10 +422,10 @@ class ZCategoriesImages
 
     // Excluded taxonomies checkboxs
     function zExcludedTaxonomies() {
-        $options = get_option('zci_options');
+        $options = (array) get_option('zci_options', []);
         $disabled_taxonomies = ['nav_menu', 'link_category', 'post_format'];
         foreach (get_taxonomies() as $tax) : if (in_array($tax, $disabled_taxonomies)) continue; ?>
-            <input type="checkbox" name="zci_options[excluded_taxonomies][<?php echo $tax ?>]" value="<?php echo $tax ?>" <?php checked(isset($options['excluded_taxonomies'][$tax])); ?> /> <?php echo $tax ;?><br />
+            <input type="checkbox" name="zci_options[excluded_taxonomies][<?php echo $tax ?>]" value="<?php echo $tax ?>" <?php checked(isset($options['excluded_taxonomies'][$tax]) && is_array($options['excluded_taxonomies']) && $options['excluded_taxonomies'][$tax] == $tax); ?> /> <?php echo $tax ;?><br />
         <?php endforeach;
     }
     
@@ -455,8 +452,8 @@ class ZCategoriesImages
     // Register field 'z_taxonomy_image_url' to the WP REST API
     function zInitRestApi() {
         $taxonomies = get_taxonomies();
-        $zci_options = get_option('zci_options');
-        if (empty($zci_options['excluded_taxonomies']))
+        $zci_options = (array) get_option('zci_options', []);
+        if (!isset($zci_options['excluded_taxonomies']) || !is_array($zci_options['excluded_taxonomies']))
             $zci_options['excluded_taxonomies'] = [];
 
         foreach ($taxonomies as $taxonomy) {

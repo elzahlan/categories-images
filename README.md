@@ -7,7 +7,7 @@ Wordpress Plugin
 
 **Tested up to:** Wordpress 6.9
 
-**Stable tag:** 3.3.0
+**Stable tag:** 3.3.1
 
 ## Description ##
 
@@ -60,18 +60,18 @@ Please check the documentation page:
 
 ## Changelog ##
 
+### 3.3.1 ###
+* Fixed a fatal error during REST API initialization.
+
 ### 3.3.0 ###
 * Added native Elementor Dynamic Tag support for taxonomy images.
 * Integrated with WordPress REST API (adds `z_taxonomy_image_url` to term responses).
 * Major shortcode overhaul:
     * Enhanced `[z_taxonomy_image]` with custom links, placeholders, and size support.
     * Enhanced `[z_taxonomy_list]` with grid/list layouts, column control, and conditional name/count display.
-* Categories Images settings menu is now under Settings > Categories Images to avoid cluttering the main WordPress menu, the settings now is more organized with a dedicated documentation page that includes usage examples and shortcodes.
 * Performance: Modern PHP array syntax refactor and optimized asset versioning.
 * Fixed frontend CSS loading for shortcode grids.
-
-### 3.2.1 ###
-* Fixed positional 'default' attribute bug in `[z_taxonomy_image]` shortcode.
+* Categories Images settings menu is now under Settings > Categories Images to avoid cluttering the main WordPress menu, the settings now is more organized with a dedicated documentation page that includes usage examples and shortcodes.
 
 ### 3.2.0 ###
 * Fix wp_options bloat issues by migrating to Term Meta API (wp_termmeta) for WP 4.4+.
