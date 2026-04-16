@@ -5,9 +5,9 @@ Wordpress Plugin
 
 **Requires at least:** Wordpress 4.0
 
-**Tested up to:** Wordpress 6.9
+**Tested up to:** Wordpress 6.9.4
 
-**Stable tag:** 3.3.1
+**Stable tag:** 3.3.3
 
 ## Description ##
 
@@ -59,6 +59,17 @@ Please check the documentation page:
 [https://zahlan.net/blog/2012/06/categories-images/](https://zahlan.net/blog/2012/06/categories-images/)
 
 ## Changelog ##
+
+### 3.3.3 ###
+* Performance Optimization: Reordered attachment lookup to prioritize stored IDs, significantly reducing database load on large sites by avoiding expensive `attachment_url_to_postid()` calls.
+* Bug Fix: Fixed "Remove Image" button to ensure the Attachment ID is also cleared upon deletion.
+* UX: Implemented event delegation in admin scripts to support AJAX-updated table rows during Quick Edit.
+
+### 3.3.2 ###
+* Security release: Fixed an authenticated Stored XSS vulnerability in the `[z_taxonomy_image]` shortcode (CVE-2026-2505).
+* General security hardening: Implemented strict "Escape on Output" for all dynamic strings to comply with WordPress.org coding standards.
+* Refactor: Replaced direct database queries with core WordPress functions to resolve Plugin Check warnings.
+* Maintenance: Verified compatibility to WordPress 6.9.4 and aligned with strict WordPress.org plugin directory standards.
 
 ### 3.3.1 ###
 * Fixed a fatal error during REST API initialization.
