@@ -49,7 +49,7 @@ $active_subtab = isset($_GET['subtab']) ? $_GET['subtab'] : 'php';
                         <h2><?php esc_html_e('PHP Usage and Documentation', 'categories-images'); ?></h2>
                         <p><?php echo wp_kses_post( __('To show the category image, use the following code in your <code>category.php</code>, <code>taxonomy.php</code>, or any other template file:', 'categories-images') ); ?></p>
                         
-                        <pre><code>&lt;img src="&lt;?php echo z_taxonomy_image_url(); ?&gt;" /&gt;</code></pre>
+                        <pre><code>&lt;img src="&lt;?php echo esc_url(z_taxonomy_image_url()); ?&gt;" /&gt;</code></pre>
                         
                         <p><?php esc_html_e('Or simply:', 'categories-images'); ?></p>
                         <pre><code>&lt;?php if (function_exists('z_taxonomy_image')) z_taxonomy_image(); ?&gt;</code></pre>
@@ -87,8 +87,8 @@ $active_subtab = isset($_GET['subtab']) ? $_GET['subtab'] : 'php';
 <pre><code>&lt;ul&gt;
     &lt;?php foreach (get_categories() as $cat) : ?&gt;
     &lt;li&gt;
-        &lt;img src="&lt;?php echo z_taxonomy_image_url($cat->term_id); ?&gt;" /&gt;
-        &lt;a href="&lt;?php echo get_category_link($cat->term_id); ?&gt;"&gt;&lt;?php echo $cat->cat_name; ?&gt;&lt;/a&gt;
+        &lt;img src="&lt;?php echo esc_url(z_taxonomy_image_url($cat->term_id)); ?&gt;" /&gt;
+        &lt;a href="&lt;?php echo esc_url(get_category_link($cat->term_id)); ?&gt;"&gt;&lt;?php echo esc_html($cat->cat_name); ?&gt;&lt;/a&gt;
     &lt;/li&gt;
     &lt;?php endforeach; ?&gt;
 &lt;/ul&gt;</code></pre>
@@ -97,8 +97,8 @@ $active_subtab = isset($_GET['subtab']) ? $_GET['subtab'] : 'php';
 <pre><code>&lt;ul&gt;
     &lt;?php foreach (get_terms('your_taxonomy') as $cat) : ?&gt;
     &lt;li&gt;
-        &lt;img src="&lt;?php echo z_taxonomy_image_url($cat->term_id); ?&gt;" /&gt;
-        &lt;a href="&lt;?php echo get_term_link($cat->slug, 'your_taxonomy'); ?&gt;"&gt;&lt;?php echo $cat->name; ?&gt;&lt;/a&gt;
+        &lt;img src="&lt;?php echo esc_url(z_taxonomy_image_url($cat->term_id)); ?&gt;" /&gt;
+        &lt;a href="&lt;?php echo esc_url(get_term_link($cat->slug, 'your_taxonomy')); ?&gt;"&gt;&lt;?php echo esc_html($cat->name); ?&gt;&lt;/a&gt;
     &lt;/li&gt;
     &lt;?php endforeach; ?&gt;
 &lt;/ul&gt;</code></pre>

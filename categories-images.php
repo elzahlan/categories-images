@@ -8,7 +8,7 @@
  * Plugin URI: https://zahlan.net/blog/categories-images/
  * Description: Categories Images Plugin allow you to add an image to category or any custom term.
  * Author: Muhammad El Zahlan
- * Version: 3.3.3
+ * Version: 3.3.4
  * Author URI: https://zahlan.net/
  * Domain Path: /languages
  * Text Domain: categories-images
@@ -22,7 +22,7 @@ if (!defined('Z_PLUGIN_URL'))
     define('Z_PLUGIN_URL', untrailingslashit(plugins_url('', __FILE__)));
 
 if (!defined('ZCI_VERSION'))
-    define('ZCI_VERSION', '3.3.3');
+    define('ZCI_VERSION', '3.3.4');
 
 class ZCategoriesImages
 {
@@ -527,14 +527,14 @@ class ZCategoriesImages
             $url = $this->zTaxonomyImageUrl($term_id, $atts['size'], true);
             if ($url == $this->zci_placeholder) {
                 if ($atts['default'] === "") {
-                    return $this->zci_placeholder;
+                    return esc_url($this->zci_placeholder);
                 } elseif (!empty($atts['default'])) {
-                    return $atts['default'];
+                    return esc_url($atts['default']);
                 } elseif (is_null($atts['default'])) {
                     return ''; // No placeholder by default
                 }
             }
-            return $url;
+            return esc_url($url);
         }
 
         $image = $this->zTaxonomyImage($term_id, $atts['size'], ['class' => $atts['class']], false);
@@ -616,7 +616,7 @@ class ZCategoriesImages
         }
 
         if ($atts['format'] === 'array') {
-            return '<pre>' . print_r($terms, true) . '</pre>';
+            return '<pre>' . esc_html(print_r($terms, true)) . '</pre>';
         }
 
         // CSS Classes

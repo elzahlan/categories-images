@@ -7,14 +7,14 @@ Wordpress Plugin
 
 **Tested up to:** Wordpress 6.9.4
 
-**Stable tag:** 3.3.3
+**Stable tag:** 3.3.4
 
 ## Description ##
 
 The Categories Images is a Wordpress plugin allow you to add image to category, tag or custom taxonomy.
 
 ### Basic Usage ###
-Use `<?php if (function_exists('z_taxonomy_image_url')) echo z_taxonomy_image_url(); ?>` to get the url and put it in any img tag.
+Use `<?php if (function_exists('z_taxonomy_image_url')) echo esc_url(z_taxonomy_image_url()); ?>` to get the url and put it in any img tag.
 Or simply use `<?php if (function_exists('z_taxonomy_image')) z_taxonomy_image(); ?>` in (category or taxonomy) template.
 
 ### Additional features ###
@@ -59,6 +59,11 @@ Please check the documentation page:
 [https://zahlan.net/blog/2012/06/categories-images/](https://zahlan.net/blog/2012/06/categories-images/)
 
 ## Changelog ##
+
+### 3.3.4 ###
+* Security: Fixed stored XSS in the `[z_taxonomy_image]` shortcode by escaping fallback and stored image URLs when `format="url"`.
+* Security hardening: Escaped taxonomy-list diagnostic output so term data is displayed as text.
+* Documentation: Added context-appropriate escaping to PHP usage examples.
 
 ### 3.3.3 ###
 * Performance Optimization: Reordered attachment lookup to prioritize stored IDs, significantly reducing database load on large sites by avoiding expensive `attachment_url_to_postid()` calls.
